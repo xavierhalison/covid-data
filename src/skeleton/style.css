@@ -1,0 +1,39 @@
+@keyframes shimer {
+  0% {
+    background: rgb(209, 209, 209);
+
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(153, 153, 153, 0.1) 25%,
+      rgba(153, 153, 153, 0.1) 100%
+    );
+  }
+  50% {
+    background: rgb(209, 209, 209);
+    background: linear-gradient(
+      90deg,
+      rgba(153, 153, 153, 0.1) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(153, 153, 153, 0.1) 100%
+    );
+  }
+  100% {
+    background: rgb(209, 209, 209);
+    background: linear-gradient(
+      90deg,
+      rgba(153, 153, 153, 0.1) 0%,
+      rgba(153, 153, 153, 0.1) 75%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  }
+}
+
+.skeleton {
+  /* width: 400px;
+  height: 400px; */
+
+  animation: shimer 0.5s alternate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
