@@ -1,135 +1,246 @@
-import React, { useState, useEffect } from "react";
-import { BarChart } from "datavis-library-tcc";
+import React, { useEffect, useState } from "react";
+import { PieChart, BarChart, LineChart } from "datavis-library-tcc";
 
-import Skeleton from "./skeleton";
+import {
+  Container,
+  Header,
+  GlobalStyle,
+  Title,
+  Body,
+  Section1,
+  Section1Chart,
+  SectionTitle,
+  LabelText,
+  Label,
+  Color,
+  Chart,
+  LabelGroup,
+  Section2,
+} from "./style";
 
-import "./App.css";
-
-import { getLatestData, getHistoryCriticalStates } from "./services";
-
-// const fetchData = () => {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       const latest = await getLatestData();
-//       const criticalStatesHistory = await getHistoryCriticalStates();
-
-//       resolve({ latest, criticalStatesHistory });
-//     } catch (error) {
-//       reject(error);
-//     }
-//   });
-// };
+import { getAllCountries, getLast12Months } from "./services";
 
 function App() {
-  const [covidData, setCovidData] = useState({
-    latest: null,
-    criticalStatesHistory: null,
-  });
+  const [cases, setCases] = useState(null);
+  const [deaths, setDeaths] = useState(null);
+  const [todayDeaths, setTodayDeaths] = useState(null);
+  const [last12Months, setLast12Months] = useState(null);
+  const [last12MonthsIndia, setLast12MonthsIndia] = useState(null);
+  const [last12MonthsMex, setLast12MonthsMex] = useState(null);
 
-  useEffect(() => console.log(covidData), [covidData]);
+  useEffect(() => {
+    if (!cases)
+      getAllCountries({ sort: "cases", number: 10 }).then((data) =>
+        setCases(data)
+      );
+  }, [cases]);
 
-  if (!covidData.latest)
-    getLatestData()
-      .then((data) => setCovidData({ ...covidData, latest: data }))
-      .then(() => {
-        if (!covidData.criticalStatesHistory)
-          getHistoryCriticalStates().then((data) =>
-            setCovidData({ ...covidData, criticalStatesHistory: data })
-          );
+  useEffect(() => {
+    if (!deaths)
+      getAllCountries({ sort: "deaths", number: 10 }).then((data) =>
+        setDeaths(data)
+      );
+  }, [deaths]);
+
+  useEffect(() => {
+    if (!todayDeaths)
+      getAllCountries({ sort: "todayDeaths", number: 10 }).then((data) =>
+        setTodayDeaths(data)
+      );
+  }, [todayDeaths]);
+
+  useEffect(() => {
+    if (!last12Months)
+      getLast12Months({ country: "brazil" }).then((data) => {
+        const formatedData = data.dates.map((d) =>
+          new Date(d).toGMTString().substring(8, 16)
+        );
+        setLast12Months({ ...data, dates: formatedData });
       });
+  }, [last12Months]);
+
+  useEffect(() => {
+    if (!last12MonthsIndia)
+      getLast12Months({ country: "india" }).then((data) => {
+        const formatedData = data.dates.map((d) =>
+          new Date(d).toGMTString().substring(8, 16)
+        );
+        setLast12MonthsIndia({ ...data, dates: formatedData });
+      });
+  }, [last12MonthsIndia]);
+
+  useEffect(() => {
+    if (!last12MonthsMex)
+      getLast12Months({ country: "mexico" }).then((data) => {
+        const formatedData = data.dates.map((d) =>
+          new Date(d).toGMTString().substring(8, 16)
+        );
+        setLast12MonthsMex({ ...data, dates: formatedData });
+      });
+  }, [last12MonthsMex]);
+
+  const colors = [
+    "#03071e",
+    "#370617",
+    "#6a040f",
+    "#9d0208",
+    "#d00000",
+    "#dc2f02",
+    "#e85d04",
+    "#f48c06",
+    "#faa307",
+    "#ffba08",
+  ];
 
   return (
-    <div className="App">
-      <div className="header">
-        <h3 className="header__title">Dados da covid-19 no Brasil</h3>
-      </div>
-      <div className="section section--1">
-        <h3 className="section__title">Tempo real</h3>
-        <div className="subsection">
-          <div className="chart-container">
-            {covidData && covidData.latest ? (
-              <>
-                <h4 className="chart-container__title">Número de mortos</h4>
+    <>
+      <GlobalStyle />
+      <Container>
+        <Header>
+          <Title>Dados da covid 19</Title>
+        </Header>
+        <Body>
+          <Section1>
+            <Section1Chart>
+              <SectionTitle>Casos (total)</SectionTitle>
+              {deaths && (
+                <Chart>
+                  <LabelGroup>
+                    {deaths?.first10Countries.map((country, key) => (
+                      <Label>
+                        <Color color={colors[key]} />
+                        <LabelText>
+                          <strong>{country}: </strong>
+                          {deaths.first10Counter[key].toLocaleString()}
+                        </LabelText>
+                      </Label>
+                    ))}
+                  </LabelGroup>
+                  <PieChart
+                    size={370}
+                    data={deaths.first10Counter}
+                    labels={deaths.first10Countries}
+                    colors={colors}
+                    font={{ fontFamily: "monospace", fontSize: 12 }}
+                  />
+                </Chart>
+              )}
+            </Section1Chart>
+            <Section1Chart>
+              <SectionTitle>Mortes (total)</SectionTitle>
+              {cases && (
+                <Chart>
+                  <PieChart
+                    size={370}
+                    data={cases.first10Counter}
+                    labels={cases.first10Countries}
+                    colors={colors}
+                    font={{ fontFamily: "monospace", fontSize: 12 }}
+                  />
+                  <LabelGroup>
+                    {cases?.first10Countries.map((country, key) => (
+                      <Label right>
+                        <Color color={colors[key]} />
+                        <LabelText>
+                          <strong>{country}: </strong>
+                          {cases.first10Counter[key].toLocaleString()}
+                        </LabelText>
+                      </Label>
+                    ))}
+                  </LabelGroup>
+                </Chart>
+              )}
+            </Section1Chart>
+          </Section1>
+          <Section2>
+            <Section1Chart dark>
+              <SectionTitle dark>Mortes (hoje)</SectionTitle>
+              {todayDeaths && (
+                <Chart>
+                  <LabelGroup>
+                    {todayDeaths?.first10Countries.map((country, key) => (
+                      <Label negative>
+                        <Color color={colors[key]} />
+                        <LabelText>
+                          <strong>{country}: </strong>
+                          {todayDeaths.first10Counter[key].toLocaleString()}
+                        </LabelText>
+                      </Label>
+                    ))}
+                  </LabelGroup>
+                  <PieChart
+                    size={370}
+                    data={todayDeaths.first10Counter}
+                    labels={todayDeaths.first10Countries}
+                    colors={colors}
+                    font={{ fontFamily: "monospace", fontSize: 12 }}
+                    negative
+                  />
+                </Chart>
+              )}
+            </Section1Chart>
+          </Section2>
+          <Section1>
+            <Section1Chart>
+              <SectionTitle>Mortes (Brasil)</SectionTitle>
+              {last12Months && (
                 <BarChart
-                  data={covidData.latest.deceasedByRegion.count}
-                  labels={covidData.latest.deceasedByRegion.labels}
                   size={450}
-                  color="#cf3a5f"
+                  data={last12Months.counter.Deaths}
+                  labels={last12Months.dates}
+                  color={colors[5]}
                 />
-              </>
-            ) : (
-              <>
-                <Skeleton width="120px" height="20px" margin="0 0 10px" />
-                <Skeleton width="450px" height="450px" />
-              </>
-            )}
-          </div>
-          <div className="chart-container">
-            {covidData && covidData.latest ? (
-              <>
-                <h4 className="chart-container__title">Número de infectados</h4>
+              )}
+            </Section1Chart>
+            <Section1Chart dark>
+              <SectionTitle dark>Casos (Brasil)</SectionTitle>
+              {last12Months && (
                 <BarChart
-                  data={covidData.latest.infectedByRegion.count}
-                  labels={covidData.latest.infectedByRegion.labels}
                   size={450}
-                  color="#cf3a5f"
+                  data={last12Months.counter.Confirmed}
+                  labels={last12Months.dates}
+                  color={colors[9]}
+                  negative
                 />
-              </>
-            ) : (
-              <>
-                <Skeleton width="120px" height="20px" margin="0 0 10px" />
-                <Skeleton width="450px" height="450px" />
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="section section--2">
-        <h3 className="section__title">Últimos dias</h3>
-        <div className="subsection">
-          <div className="chart-container">
-            {covidData && covidData.latest ? (
-              <>
-                <h4 className="chart-container__title chart-container__title--negative">
-                  Número de mortos
-                </h4>
-                <BarChart
-                  data={covidData.latest.deceasedByRegion.count}
-                  labels={covidData.latest.deceasedByRegion.labels}
+              )}
+            </Section1Chart>
+          </Section1>
+          <Section1>
+            <Section1Chart>
+              <SectionTitle>Casos (Brasil, Índia e México)</SectionTitle>
+              {last12Months && last12MonthsIndia && last12MonthsMex && (
+                <LineChart
                   size={450}
-                  color="#cf3a5f"
+                  datasets={[
+                    last12Months.counter.Confirmed,
+                    last12MonthsIndia.counter.Confirmed,
+                    last12MonthsMex.counter.Confirmed,
+                  ]}
+                  labels={last12Months.dates}
+                  colors={[colors[0], colors[5], colors[9]]}
                 />
-              </>
-            ) : (
-              <>
-                <Skeleton width="120px" height="20px" margin="0 0 10px" />
-                <Skeleton width="450px" height="450px" />
-              </>
-            )}
-          </div>
-          <div className="chart-container">
-            {covidData && covidData.latest ? (
-              <>
-                <h4 className="chart-container__title chart-container__title--negative">
-                  Número de mortos
-                </h4>
-                <BarChart
-                  data={covidData.latest.deceasedByRegion.count}
-                  labels={covidData.latest.deceasedByRegion.labels}
+              )}
+            </Section1Chart>
+            <Section1Chart dark>
+              <SectionTitle dark>Casos (Brasil, Índia e México)</SectionTitle>
+              {last12Months && last12MonthsIndia && last12MonthsMex && (
+                <LineChart
                   size={450}
-                  color="#cf3a5f"
+                  datasets={[
+                    last12Months.counter.Confirmed,
+                    last12MonthsIndia.counter.Confirmed,
+                    last12MonthsMex.counter.Confirmed,
+                  ]}
+                  labels={last12Months.dates}
+                  colors={["#ffffff", colors[5], colors[9]]}
+                  negative
                 />
-              </>
-            ) : (
-              <>
-                <Skeleton width="120px" height="20px" margin="0 0 10px" />
-                <Skeleton width="450px" height="450px" />
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+              )}
+            </Section1Chart>
+          </Section1>
+        </Body>
+      </Container>
+    </>
   );
 }
 

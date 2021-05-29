@@ -1,0 +1,27 @@
+.container {
+    width: 100%
+}
+
+.field {
+    font-size: 18px;
+    padding: 10px 5px;
+    border-radius: 5px;
+    width: 100%
+}
+
+.results {
+    max-height: 200px;
+    overflow: auto;
+    border: 1px solid;
+}
+
+.results__item {
+    padding: 10px 5px;
+}
+
+.results__item:hover {
+    background-color: lightgray;
+    font-weight: bolder;
+    cursor: pointer;
+}
+

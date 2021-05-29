@@ -1,0 +1,70 @@
+.label {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.label--pull-right {
+    justify-content: flex-end;
+}
+
+.label__color {
+    height: 25px;
+    width: 25px;
+    margin: 0 10px 0 0;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+.label__color--pull-right {
+    margin: 0 0 0 10px;
+}
+
+.section {
+    display: flex;
+    justify-content: space-around;
+}
+
+.section--2 {
+    background-color: black;
+    color: white;
+}
+
+.subsection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.subsection__title {
+    color: var(--color-5);
+    margin: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.subsection__title--dark {
+    color: var(--color-10);
+}
+
+.chart {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.label__color--1 {background-color: var(--color-1)}
+.label__color--2 {background-color: var(--color-2)}
+.label__color--3 {background-color: var(--color-3)}
+.label__color--4 {background-color: var(--color-4)}
+.label__color--5 {background-color: var(--color-5)}
+.label__color--6 {background-color: var(--color-6)}
+.label__color--7 {background-color: var(--color-7)}
+.label__color--8 {background-color: var(--color-8)}
+.label__color--9 {background-color: var(--color-9)}
+.label__color--10 {background-color: var(--color-10)}
+
