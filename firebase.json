@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "tcc-f0fdf",
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
