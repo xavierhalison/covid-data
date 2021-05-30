@@ -127,7 +127,7 @@ function App() {
               )}
             </Section1Chart>
             <Section1Chart>
-              <SectionTitle>Mortes (total)</SectionTitle>
+              <SectionTitle>Óbitos (total)</SectionTitle>
               {cases && (
                 <Chart>
                   <PieChart
@@ -154,7 +154,7 @@ function App() {
           </Section1>
           <Section2>
             <Section1Chart dark>
-              <SectionTitle dark>Mortes (hoje)</SectionTitle>
+              <SectionTitle dark>Óbitos (hoje)</SectionTitle>
               {todayDeaths && (
                 <Chart>
                   <LabelGroup>
@@ -181,8 +181,20 @@ function App() {
             </Section1Chart>
           </Section2>
           <Section1>
+            <Section1Chart dark>
+              <SectionTitle dark>Casos (Brasil)</SectionTitle>
+              {last12Months && (
+                <BarChart
+                  size={400}
+                  data={last12Months.counter.Confirmed}
+                  labels={last12Months.dates}
+                  color={colors[9]}
+                  negative
+                />
+              )}
+            </Section1Chart>
             <Section1Chart>
-              <SectionTitle>Mortes (Brasil)</SectionTitle>
+              <SectionTitle>Óbitos (Brasil)</SectionTitle>
               {last12Months && (
                 <BarChart
                   size={450}
@@ -192,50 +204,56 @@ function App() {
                 />
               )}
             </Section1Chart>
-            <Section1Chart dark>
-              <SectionTitle dark>Casos (Brasil)</SectionTitle>
-              {last12Months && (
-                <BarChart
-                  size={450}
-                  data={last12Months.counter.Confirmed}
-                  labels={last12Months.dates}
-                  color={colors[9]}
-                  negative
-                />
-              )}
-            </Section1Chart>
           </Section1>
           <Section1>
             <Section1Chart>
-              <SectionTitle>Casos (Brasil, Índia e México)</SectionTitle>
-              {last12Months && last12MonthsIndia && last12MonthsMex && (
+              <SectionTitle>Casos (Brasil, Índia)</SectionTitle>
+              {last12Months && last12MonthsIndia && (
                 <LineChart
-                  size={450}
+                  size={400}
                   datasets={[
                     last12Months.counter.Confirmed,
                     last12MonthsIndia.counter.Confirmed,
-                    last12MonthsMex.counter.Confirmed,
                   ]}
                   labels={last12Months.dates}
-                  colors={[colors[0], colors[5], colors[9]]}
+                  colors={[colors[5], colors[9]]}
                 />
               )}
+              <LabelGroup row>
+                {["Brazil", "India"].map((country, key) => (
+                  <Label right>
+                    <LabelText row>
+                      <strong>{country}</strong>
+                    </LabelText>
+                    <Color color={colors[key === 0 ? 5 : 9]} />
+                  </Label>
+                ))}
+              </LabelGroup>
             </Section1Chart>
             <Section1Chart dark>
-              <SectionTitle dark>Casos (Brasil, Índia e México)</SectionTitle>
-              {last12Months && last12MonthsIndia && last12MonthsMex && (
+              <SectionTitle dark>Óbitos (Brasil, Índia)</SectionTitle>
+              {last12Months && last12MonthsIndia && (
                 <LineChart
-                  size={450}
+                  size={400}
                   datasets={[
-                    last12Months.counter.Confirmed,
-                    last12MonthsIndia.counter.Confirmed,
-                    last12MonthsMex.counter.Confirmed,
+                    last12Months.counter.Deaths,
+                    last12MonthsIndia.counter.Deaths,
                   ]}
                   labels={last12Months.dates}
-                  colors={["#ffffff", colors[5], colors[9]]}
+                  colors={[colors[5], colors[9]]}
                   negative
                 />
               )}
+              <LabelGroup row>
+                {["Brazil", "India"].map((country, key) => (
+                  <Label right negative>
+                    <LabelText row>
+                      <strong>{country}</strong>
+                    </LabelText>
+                    <Color color={colors[key === 0 ? 5 : 9]} />
+                  </Label>
+                ))}
+              </LabelGroup>
             </Section1Chart>
           </Section1>
         </Body>

@@ -92,11 +92,15 @@ export const Color = styled.div`
   margin: 0 5px;
 `;
 
-export const LabelText = styled.span``;
+export const LabelText = styled.span`
+  margin-right: ${({ row }) => (row ? "20px" : "0")};
+`;
 
 export const Chart = styled.div`
   display: flex;
   align-items: center;
 `;
 
-export const LabelGroup = styled.div``;
+export const LabelGroup = styled.div`
+  display: ${({ row }) => (row ? "flex" : "block")};
+`;

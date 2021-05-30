@@ -27,8 +27,6 @@ export const getAllCountries = ({ sort, number, restOfTheWorld = true }) => {
     .catch((error) => error);
 };
 
-// "{{baseUrl}}/country/{{country}}?from=2020-03-01T00:00:00Z&to=2020-04-01T00:00:00Z"
-
 export const getLast12Months = ({ country }) => {
   const dates = getLastStartAndEndDates(),
     { startDate } = dates[0],
@@ -46,11 +44,25 @@ export const getLast12Months = ({ country }) => {
     .then((data) => {
       const dates = allEndDates;
       const counter = {
-        Deaths: data.map(({ Deaths }) => Deaths),
-        Confirmed: data.map(({ Confirmed }) => Confirmed),
+        Deaths: data.map(({ Deaths }, key) => {
+          return key - 1 === -1 ? Deaths : Deaths - data[key - 1].Deaths;
+        }),
+        Confirmed: data.map(({ Confirmed }, key) => {
+          return key - 1 === -1
+            ? Confirmed
+            : Confirmed - data[key - 1].Confirmed;
+        }),
       };
 
       return { dates, counter };
+    })
+    .then(({ dates, counter }) => {
+      const { Confirmed, Deaths } = counter;
+      Confirmed.shift();
+      Deaths.shift();
+
+      dates.shift();
+      return { dates, counter: { Confirmed, Deaths } };
     });
 };
 
@@ -63,12 +75,15 @@ const subtractMonth = (date, number) => {
     date.setMonth(11);
     return subtractMonth(date, (m - number + 1) * -1);
   } else {
+    if (m - number === 1) {
+      date.setMonth(m - number);
+    }
     date.setMonth(m - number);
     return date;
   }
 };
 
-export const getLastStartAndEndDates = (number = 12) => {
+export const getLastStartAndEndDates = (number = 13) => {
   const dates = [];
 
   for (let index = number; index > 0; index--) {
@@ -81,8 +96,6 @@ export const getLastStartAndEndDates = (number = 12) => {
       .replace("T03", "T00");
     dates.push({ startDate, endDate });
   }
-
-  console.log(dates);
 
   return dates;
 };
