@@ -103,23 +103,23 @@ function App() {
           <Section1>
             <Section1Chart>
               <SectionTitle>Casos (total)</SectionTitle>
-              {deaths && (
+              {cases && (
                 <Chart>
                   <LabelGroup>
-                    {deaths?.first10Countries.map((country, key) => (
+                    {cases?.first10Countries.map((country, key) => (
                       <Label>
                         <Color color={colors[key]} />
                         <LabelText>
                           <strong>{country}: </strong>
-                          {deaths.first10Counter[key].toLocaleString()}
+                          {cases.first10Counter[key].toLocaleString()}
                         </LabelText>
                       </Label>
                     ))}
                   </LabelGroup>
                   <PieChart
                     size={370}
-                    data={deaths.first10Counter}
-                    labels={deaths.first10Countries}
+                    data={cases.first10Counter}
+                    labels={cases.first10Countries}
                     colors={colors}
                     font={{ fontFamily: "monospace", fontSize: 12 }}
                   />
@@ -128,22 +128,22 @@ function App() {
             </Section1Chart>
             <Section1Chart>
               <SectionTitle>Óbitos (total)</SectionTitle>
-              {cases && (
+              {deaths && (
                 <Chart>
                   <PieChart
                     size={370}
-                    data={cases.first10Counter}
-                    labels={cases.first10Countries}
+                    data={deaths.first10Counter}
+                    labels={deaths.first10Countries}
                     colors={colors}
                     font={{ fontFamily: "monospace", fontSize: 12 }}
                   />
                   <LabelGroup>
-                    {cases?.first10Countries.map((country, key) => (
+                    {deaths?.first10Countries.map((country, key) => (
                       <Label right>
                         <Color color={colors[key]} />
                         <LabelText>
                           <strong>{country}: </strong>
-                          {cases.first10Counter[key].toLocaleString()}
+                          {deaths.first10Counter[key].toLocaleString()}
                         </LabelText>
                       </Label>
                     ))}
